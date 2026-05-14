@@ -4,16 +4,15 @@ import numpy as np
 import statistics
 from numpy import array
 
-# lambda x: x * x * x
 bases = [lambda x: x**3, lambda x: x**2, lambda x: x, lambda x: 1]
 a, b, c, d = tuple(
     np.vectorize(lambda x: np.round(x, 2))([random() * 100 for i in range(4)])
 )
 
-true_func = lambda x: 10 * x**2 + 10 * x + 10
+# Defines the cubic and standardizes input vals
 true_func = lambda x: a * x**3 + b * x**2 + c * x + d
 print(f"The true function is {a}x^3 + {b}x^2 + {c}x + {d}")
-x_vals = [6, 5, 4, 3, 2, 1]
+x_vals = [6, 5, 4, 3, 2, 1, -6, -2, -4, -8, -10, 3]
 x_vals = [float(val) for val in x_vals]
 x_vals_mean = statistics.mean(x_vals)
 x_vals_std = statistics.stdev(x_vals)
@@ -23,30 +22,10 @@ x_vals = array(
         for val in x_vals
     ]
 )
+# set random weights
 weights = array([random() for i in range(len(bases))])
-# print(weights)
+# designate feature map based off basis
 feature_map = array([[basis(val) for val in x_vals] for basis in bases]).T
-# print("feature map \n", feature_map)
-# scaling calculation
-# scaling_factors = [
-#     statistics.stdev(col) if statistics.stdev(col) != 0 else 1 for col in feature_map.T
-# ]
-# means = [sum(col) / len(col) for col in feature_map.T]
-# scaled_map = feature_map.T
-# Shift values by the mean
-# scaled_map = array(
-#     [
-#         (
-#             ((scaled_map[i] - means[i]) / scaling_factors[i])
-#             if ((scaled_map[i] - means[i]).all() != 0)
-#             else scaled_map[i] / scaling_factors[i]
-#         )
-#         for i in range(len(scaled_map))
-#     ]
-# ).T
-
-
-# print(scaled_map)
 
 
 # We note that I (feature map) times w (the weight vector) - y (bias) should be minimize
@@ -72,11 +51,14 @@ def grad_func(feature_map, weights, true_vals):
 
 
 true_vals = [true_func(val) for val in x_vals]
-# scaled_vals = array([true_vals[i] / scaling_factors[i] for i in range(len(true_vals))])
-# feature_map = scaled_map
 eta = 0.001
-# print("grad", eta * grad_func(feature_map, weights, true_vals))
+counter = 0
 while mean_square_error(feature_map, weights, true_vals) > 0.000001:
+    # way to track regressions with over 100,000 runs
+    counter += 1
+    if counter % 100000 == 0:
+        print(weights)
+    # adjust the weights based off eta * grad
     weights -= eta * grad_func(feature_map, weights, true_vals)
 
 print(f"The solution is {np.vectorize(lambda x: np.round(x,2))(weights)}")
