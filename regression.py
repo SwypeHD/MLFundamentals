@@ -14,8 +14,8 @@ a, b, c, d = tuple(
 true_func = lambda x: a * x**3 + b * x**2 + c * x + d
 # true_func = lambda x: math.sin(x)
 print(f"The true function is {a}x^3 + {b}x^2 + {c}x + {d}")
-# x_vals = [6, 5, 4, 3, 2, 1, -6, -2, -4, -8, -10, 3]
-x_vals = [3, 2, 1, 0, -1, -2, -3]
+x_vals = [6, 5, 4, 3, 2, 1, -6, -2, -4, -8, -10, 3]
+# x_vals = [3, 2, 1, 0, -1, -2, -3]
 x_vals = [float(val) for val in x_vals]
 x_vals_mean = statistics.mean(x_vals)
 x_vals_std = statistics.stdev(x_vals)
