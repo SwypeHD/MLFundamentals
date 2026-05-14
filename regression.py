@@ -3,16 +3,19 @@ from random import random
 import numpy as np
 import statistics
 from numpy import array
+import math
 
 bases = [lambda x: x**3, lambda x: x**2, lambda x: x, lambda x: 1]
 a, b, c, d = tuple(
-    np.vectorize(lambda x: np.round(x, 2))([random() * 100 for i in range(4)])
+    np.vectorize(lambda x: np.round(x, 2))([random() * 1000 for i in range(4)])
 )
 
 # Defines the cubic and standardizes input vals
 true_func = lambda x: a * x**3 + b * x**2 + c * x + d
+# true_func = lambda x: math.sin(x)
 print(f"The true function is {a}x^3 + {b}x^2 + {c}x + {d}")
-x_vals = [6, 5, 4, 3, 2, 1, -6, -2, -4, -8, -10, 3]
+# x_vals = [6, 5, 4, 3, 2, 1, -6, -2, -4, -8, -10, 3]
+x_vals = [3, 2, 1, 0, -1, -2, -3]
 x_vals = [float(val) for val in x_vals]
 x_vals_mean = statistics.mean(x_vals)
 x_vals_std = statistics.stdev(x_vals)
@@ -51,9 +54,10 @@ def grad_func(feature_map, weights, true_vals):
 
 
 true_vals = [true_func(val) for val in x_vals]
-eta = 0.001
+eta = 0.0001
 counter = 0
-while mean_square_error(feature_map, weights, true_vals) > 0.000001:
+error_threshhold = 0.00001
+while mean_square_error(feature_map, weights, true_vals) > error_threshhold:
     # way to track regressions with over 100,000 runs
     counter += 1
     if counter % 100000 == 0:
